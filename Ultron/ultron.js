@@ -135,11 +135,6 @@
             if (resp.getResponseCode() === 200) {
               return JSON.parse(resp.getContentText());
             } else {
-              console.error({
-                url_base: url_base,
-                code: resp.getResponseCode(),
-                response: resp.getContentText(),
-              });
               _showFeedback('System')({
                 fail: true,
                 description:

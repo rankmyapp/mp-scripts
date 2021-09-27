@@ -3,6 +3,7 @@
     "minify:ultron": "node ./Ultron"
   },
   "devDependencies": {
+    "husky": "^7.0.2",
     "uglify-js": "^3.14.1"
   }
 }

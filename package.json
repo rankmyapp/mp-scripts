@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "minify:ultron": "node ./Ultron"
+  },
+  "devDependencies": {
+    "uglify-js": "^3.14.1"
+  }
+}

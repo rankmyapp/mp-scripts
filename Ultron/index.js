@@ -15,10 +15,14 @@ const result = uglify.minify(
   }
 );
 
-fs.writeFile('cdn.js', result.code, (err) => {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log('Success');
+fs.writeFile(
+  'cdn.js',
+  result.code.replace('@ULTRON_VERSION', process.env.npm_package_version),
+  (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('Success');
+    }
   }
-});
+);

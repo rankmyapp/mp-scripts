@@ -21,6 +21,8 @@
    */
   return new (function initUltron() {
     const bootstrap = () => {
+      console.log('Running version', '@ULTRON_VERSION');
+
       /**
        *
        * @param {object} An Object with title, description, or suffix for the title.

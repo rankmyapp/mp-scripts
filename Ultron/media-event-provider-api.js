@@ -22,6 +22,19 @@ function updateConversions(ctx) {
     canaisIOS: 'Canais iOS',
   };
 
+  const _getFiltersNames = () => {
+    const cell = tableUtil.findCellByText('filtro_appsflyer', 'Event Filter');
+    if (!cell) return [];
+
+    const appsflyer = ss.getSheetByName('filtro_appsflyer');
+    const range = appsflyer.getRange(cell.row + 1, cell.column, 20);
+
+    return range
+      .getValues()
+      .filter((v) => Array.isArray(v) && v.length && v[0])
+      .map((v) => v[0]);
+  };
+
   const _filterEvents = (data) => {
     if (ctx !== this.GLOBAL.context.APPSFLYER) return data;
 
@@ -39,19 +52,9 @@ function updateConversions(ctx) {
       'conversion_rate',
     ];
 
-    const cell = tableUtil.findCellByText('filtro_appsflyer', 'Event Filter');
-    if (!cell) return data;
+    const filters = _getFiltersNames();
 
-    const appsflyer = ss.getSheetByName('filtro_appsflyer');
-    const range = appsflyer.getRange(cell.row + 1, cell.column, 20);
-
-    const values = [
-      ...IGNORE_COLUMNS,
-      ...range
-        .getValues()
-        .filter((v) => Array.isArray(v) && v.length && v[0])
-        .map((v) => v[0]),
-    ];
+    const values = [...IGNORE_COLUMNS, ...(filters.length ? filters : data)];
 
     if (values.length === IGNORE_COLUMNS.length) return data;
 
@@ -271,6 +274,8 @@ function updateConversions(ctx) {
 
   const date = new Date(year, month + 1, 0);
 
+  const filterEvents = _getFiltersNames();
+
   const queryParams = {
     start: [
       date.getFullYear(),
@@ -285,6 +290,7 @@ function updateConversions(ctx) {
     withDuplicate: true,
     country: true,
     orderDirection: 'asc',
+    eventNames: filterEvents.length ? filterEvents.join(',') : undefined,
   };
 
   const campaignID = (id) =>

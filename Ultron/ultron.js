@@ -66,6 +66,8 @@
           '?' +
           Object.keys(qs)
             .reduce(function (acc, curr) {
+              if (qs[curr] === undefined) return acc;
+
               return acc.concat(
                 encodeURIComponent(curr) + '=' + encodeURIComponent(qs[curr])
               );

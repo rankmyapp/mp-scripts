@@ -49,12 +49,13 @@ function updateConversions(ctx) {
       'clicks',
       'ctr',
       'installs',
+      'install',
       'conversion_rate',
     ];
 
     const filters = _getFiltersNames();
 
-    const values = [...IGNORE_COLUMNS, ...(filters.length ? filters : data)];
+    const values = [...IGNORE_COLUMNS, ...filters];
 
     if (values.length === IGNORE_COLUMNS.length) return data;
 

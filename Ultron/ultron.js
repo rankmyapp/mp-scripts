@@ -21,7 +21,7 @@
    */
   return new (function initUltron() {
     const bootstrap = () => {
-      console.log('Running version', '@ULTRON_VERSION');
+      console.log('Running Ultron version', '@ULTRON_VERSION');
 
       /**
        *
@@ -247,11 +247,32 @@
               ultronCTX,
               ultronCTX.GLOBAL.context.APPSFLYER
             ),
+          updateNFeJarvis: () => updateNFeJarvis.call(ultronCTX),
+          updateCurrenciesJarvis: () => updateCurrenciesJarvis.call(ultronCTX),
+          updatecostUA_RTGJarvis: () => updatecostUA_RTGJarvis.call(ultronCTX),
+          updatecostCostMPJarvis: () => updatecostCostMPJarvis.call(ultronCTX),
         },
       };
     };
 
     const ref = bootstrap();
+
+    //Initial_modules
+    ref.addModule('jarvis', {
+      //url_base: 'https://jarvis-gateway.rankmyapp.com/jarvis',
+      url_base: 'https://jarvis-api-gateway.apps.dev.rankmycluster.com/jarvis',
+      headers: {
+        Authorization: '<token>',
+      },
+    });
+
+    ref.addModule('media', {
+      url_base: 'https://jarvis-gateway.rankmyapp.com/provider',
+      headers: {
+        Authorization: '<token>',
+      },
+    });
+
     initUltronUtils.call(ref);
 
     return ref;

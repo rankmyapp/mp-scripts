@@ -3,13 +3,6 @@
  */
 
 function updateTSIJarvis() {
-  this.addModule('jarvis', {
-    url_base: 'https://jarvis-gateway.rankmyapp.com/jarvis',
-    headers: {
-      Authorization: '<token>',
-    },
-  });
-
   const _handleResetRows = (table) => {
     if (
       table !== this.GLOBAL.context.ANDROID &&

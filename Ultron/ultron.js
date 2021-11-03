@@ -259,8 +259,7 @@
 
     //Initial_modules
     ref.addModule('jarvis', {
-      //url_base: 'https://jarvis-gateway.rankmyapp.com/jarvis',
-      url_base: 'https://jarvis-api-gateway.apps.dev.rankmycluster.com/jarvis',
+      url_base: 'https://jarvis-gateway.rankmyapp.com/jarvis',
       headers: {
         Authorization: '<token>',
       },

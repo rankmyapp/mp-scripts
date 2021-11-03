@@ -1,28 +1,35 @@
 const fs = require('fs');
+const path = require('path');
 const uglify = require('uglify-js');
 
-const result = uglify.minify(
-  [
-    fs.readFileSync(__dirname + '/ultron.js', 'utf8'),
-    fs.readFileSync(__dirname + '/ultron.utils.js', 'utf8'),
-    fs.readFileSync(__dirname + '/jarvis-api.js', 'utf8'),
-    fs.readFileSync(__dirname + '/media-event-provider-api.js', 'utf8'),
-  ],
+const minify = ({ output, files }) => {
+  if (!Array.isArray(files) || typeof output !== 'string') return;
 
-  {
-    keep_fnames: true,
-    compress: false,
-  }
-);
-
-fs.writeFile(
-  'cdn.js',
-  result.code.replace('@ULTRON_VERSION', process.env.npm_package_version),
-  (err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log('Success');
+  const result = uglify.minify(
+    [
+      fs.readFileSync(__dirname + '/ultron.js', 'utf8'),
+      fs.readFileSync(__dirname + '/ultron.utils.js', 'utf8'),
+      ...files,
+    ],
+    {
+      keep_fnames: true,
+      compress: false,
     }
-  }
-);
+  );
+
+  fs.writeFile(
+    `${path.dirname(__dirname)}/${output}`,
+    result.code.replace('@ULTRON_VERSION', process.env.npm_package_version),
+    (err) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log('Success');
+      }
+    }
+  );
+};
+
+module.exports = {
+  minify,
+};

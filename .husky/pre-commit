@@ -1,4 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-yarn minify:ultron && git add cdn.js
+yarn minify && git add cdn.js campaignClosing.js

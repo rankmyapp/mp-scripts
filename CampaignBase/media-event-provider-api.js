@@ -5,13 +5,6 @@ function updateConversions(ctx) {
   )
     return;
 
-  this.addModule('media', {
-    url_base: 'https://jarvis-gateway.rankmyapp.com/provider',
-    headers: {
-      Authorization: '<token>',
-    },
-  });
-
   const tableUtil = this.getUtil('table')();
 
   const ALIAS = {

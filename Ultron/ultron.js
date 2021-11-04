@@ -251,6 +251,10 @@
           updateCurrenciesJarvis: () => updateCurrenciesJarvis.call(ultronCTX),
           updatecostUA_RTGJarvis: () => updatecostUA_RTGJarvis.call(ultronCTX),
           updatecostCostMPJarvis: () => updatecostCostMPJarvis.call(ultronCTX),
+          updateMPAutomationJarvis: () =>
+            updateMPAutomationJarvis.call(ultronCTX),
+          updateCurrenciesMPAutomationJarvis: () =>
+            updateCurrenciesMPAutomationJarvis.call(ultronCTX),
         },
       };
     };

@@ -58,7 +58,7 @@ function updateTSIJarvis() {
         [data.campaign.currency],
         [data.campaign.costModel],
         [data.campaign.budgetTotal],
-        [data.app.bundle],
+        [data.app?.bundle],
       ]);
       this.getModule('jarvis')().showFeedback({
         suffix: 'Traffic Source Instances',

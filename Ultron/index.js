@@ -24,7 +24,7 @@ const minify = ({ output, files }) => {
       if (err) {
         console.log(err);
       } else {
-        console.log('Success');
+        console.log(`${output} - Success`);
       }
     }
   );

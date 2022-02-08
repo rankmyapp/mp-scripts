@@ -10,6 +10,7 @@ Ultron.minify({
   files: [
     fs.readFileSync(__dirname + '/jarvis-api.js', 'utf8'),
     fs.readFileSync(__dirname + '/media-event-provider-api.js', 'utf8'),
+    fs.readFileSync(__dirname + '/clicks.js', 'utf8'),
   ],
   output: 'cdn.js',
 });

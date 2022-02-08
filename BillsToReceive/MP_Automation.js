@@ -38,16 +38,17 @@ function updateMPAutomationJarvis() {
       const nextMonth = isNextYear ? 1 : parseInt(month) + 1;
 
       rows.push([
-        `${01}-${month}-${year}`,
+        year && month ? `${01}-${month}-${year}` : null,
         isNextYear ? parseInt(year) + 1 : year,
         month,
-        nextMonth,
+        Number.isNaN(nextMonth) ? null : nextMonth,
         item._id,
         item.account?.businessName,
         item.account?.name,
         item.budget?.isInvoiceApproved === 1 ? 'Sim' : 'Não',
         item.currency,
         item.budget?.invoice,
+        item.days,
       ]);
     });
 
@@ -57,7 +58,7 @@ function updateMPAutomationJarvis() {
 
     // Apply values
     if (rows.length) {
-      const range = sheet.getRange('A2:J' + (2 + rows.length - 1));
+      const range = sheet.getRange('A2:K' + (2 + rows.length - 1));
       range.setValues(rows);
     }
   });

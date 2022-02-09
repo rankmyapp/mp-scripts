@@ -233,6 +233,39 @@ function updateConversions(ctx) {
     }
   };
 
+  /**
+   *
+   * @param {Date} start month start
+   * @param {Date} end month end
+   * @param {number} interval interval of days
+   * @param {{start: Date, end: Date}[]} result intervals
+   *
+   * @returns {{start: Date, end: Date}[]} returns the intervals
+   */
+  const intervalsOfMonth = (start, end, interval, result) => {
+    const newEnd = new Date(start);
+    newEnd.setDate(newEnd.getDate() + interval);
+
+    const data = {
+      start,
+      end: newEnd,
+    };
+
+    if (newEnd >= end)
+      return [
+        ...result,
+        {
+          start,
+          end,
+        },
+      ];
+
+    const newStart = new Date(newEnd);
+    newStart.setDate(newStart.getDate() + 1);
+
+    return intervalsOfMonth(newStart, end, interval, [...result, data]);
+  };
+
   const ss = SpreadsheetApp.getActive();
 
   const campaignIDAndroid = ss
@@ -263,30 +296,6 @@ function updateConversions(ctx) {
     return;
   }
 
-  const month = dateAndroid ? dateAndroid.getMonth() : dateIOS.getMonth();
-  const year = dateAndroid ? dateAndroid.getFullYear() : dateIOS.getFullYear();
-
-  const date = new Date(year, month + 1, 0);
-
-  const filterEvents = _getFiltersNames();
-
-  const queryParams = {
-    start: [
-      date.getFullYear(),
-      (date.getMonth() + 1).toString().padStart(2, '0'),
-      '01',
-    ].join('-'),
-    end: [
-      date.getFullYear(),
-      (date.getMonth() + 1).toString().padStart(2, '0'),
-      date.getDate().toString().padStart(2, '0'),
-    ].join('-'),
-    withDuplicate: true,
-    country: true,
-    orderDirection: 'asc',
-    eventNames: filterEvents.length ? filterEvents.join(',') : undefined,
-  };
-
   const campaignID = (id) =>
     [id]
       .filter((v) => !!v)
@@ -296,21 +305,94 @@ function updateConversions(ctx) {
 
   const campaignString = (id) => (typeof id === 'number' ? id.toString() : id);
 
-  const androidRequest = _requestData(
-    { ...queryParams, campaignIds: campaignID(campaignIDAndroid) },
+  /**
+   *
+   * @param {Date} value
+   *
+   * @returns string
+   */
+  const getFormattedDate = (value) =>
+    [
+      value.getFullYear(),
+      (value.getMonth() + 1).toString().padStart(2, '0'),
+      value.getDate().toString().padStart(2, '0'),
+    ].join('-');
+
+  const month = dateAndroid ? dateAndroid.getMonth() : dateIOS.getMonth();
+  const year = dateAndroid ? dateAndroid.getFullYear() : dateIOS.getFullYear();
+
+  const dateOfSheet = new Date(year, month + 1, 0);
+  const campaignStartDate = new Date(
+    dateOfSheet.getFullYear(),
+    dateOfSheet.getMonth(),
+    1
+  );
+  const campaignEndDate = dateOfSheet;
+
+  const filterEvents = _getFiltersNames();
+
+  const queryParams = {
+    withDuplicate: true,
+    country: true,
+    orderDirection: 'asc',
+    eventNames: filterEvents.length ? filterEvents.join(',') : undefined,
+  };
+
+  /**
+   *
+   * @param {string} campaignIds Uma string com os ID's/token da campanha: Ex: 120,244,600
+   * @param {Date} start Início da Campanha
+   * @param {*} end Fim da campanha
+   *
+   * @returns Retorna uma lista de request
+   */
+  const requests = (campaignIds, start, end) => {
+    return intervalsOfMonth(start, end, 10, []).map(
+      ({ start, end }) =>
+        new Promise((resolve) => {
+          _requestData(
+            {
+              ...queryParams,
+              start: getFormattedDate(start),
+              end: getFormattedDate(end),
+              campaignIds: campaignID(campaignIds),
+            },
+            (response) => {
+              if (!Array.isArray(response)) return resolve({});
+              resolve(response);
+            }
+          );
+        })
+    );
+  };
+
+  const requestsAdnroid = requests(
+    campaignIDAndroid,
+    campaignStartDate,
+    campaignEndDate
+  );
+
+  const requestsIOS = requests(
+    campaignIDiOS,
+    campaignStartDate,
+    campaignEndDate
+  );
+
+  Promise.all(requestsAdnroid).then((response) => {
+    const data = Array.isArray(response) ? response : [];
+
     _applyDataOnTable({
       campaignIDAndroid: campaignString(campaignIDAndroid),
       contextApplyData: this.GLOBAL.context.ANDROID,
-    })
-  );
+    })(data.flat());
+  });
 
-  const iOSRequest = _requestData(
-    { ...queryParams, campaignIds: campaignID(campaignIDiOS) },
+  Promise.all(requestsIOS).then((response) => {
+    const data = Array.isArray(response) ? response : [];
+
     _applyDataOnTable({
       campaignIDiOS: campaignString(campaignIDiOS),
       contextApplyData: this.GLOBAL.context.IOS,
-    })
-  );
-
-  Promise.all([androidRequest, iOSRequest]);
+    })(data.flat());
+  });
 }

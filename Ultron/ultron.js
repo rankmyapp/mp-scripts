@@ -64,15 +64,22 @@
       function _handleQueryString(qs) {
         if (typeof qs !== 'object') return '';
 
+        const qsKeyValue = (key, value) =>
+          encodeURIComponent(key) + '=' + encodeURIComponent(value);
+
         return (
           '?' +
           Object.keys(qs)
             .reduce(function (acc, curr) {
               if (qs[curr] === undefined) return acc;
+              if (Array.isArray(qs[curr])) {
+                const keyValueStr = qs[curr].map((item) =>
+                  qsKeyValue(`${curr}[]`, item)
+                );
+                return acc.concat(keyValueStr);
+              }
 
-              return acc.concat(
-                encodeURIComponent(curr) + '=' + encodeURIComponent(qs[curr])
-              );
+              return acc.concat(qsKeyValue(curr, qs[curr]));
             }, [])
             .join('&')
         );
@@ -247,6 +254,8 @@
               ultronCTX,
               ultronCTX.GLOBAL.context.APPSFLYER
             ),
+          updateClicks: () =>
+            updateClicks.call(ultronCTX, ultronCTX.GLOBAL.context.TRACKIER),
           updateNFeJarvis: () => updateNFeJarvis.call(ultronCTX),
           updateCurrenciesJarvis: () => updateCurrenciesJarvis.call(ultronCTX),
           updatecostUA_RTGJarvis: () => updatecostUA_RTGJarvis.call(ultronCTX),

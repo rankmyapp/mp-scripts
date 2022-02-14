@@ -272,14 +272,15 @@
 
     //Initial_modules
     ref.addModule('jarvis', {
-      url_base: 'https://jarvis-gateway.rankmyapp.com/jarvis',
+      url_base: 'https://jarvis-api-gateway.apps.stg.rankmycluster.com/jarvis',
       headers: {
         Authorization: '<token>',
       },
     });
 
     ref.addModule('media', {
-      url_base: 'https://jarvis-gateway.rankmyapp.com/provider',
+      url_base:
+        'https://jarvis-api-gateway.apps.stg.rankmycluster.com/provider',
       headers: {
         Authorization: '<token>',
       },

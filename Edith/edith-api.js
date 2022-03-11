@@ -12,11 +12,11 @@ function updateNegativeList() {
 	};
 
 	/**
-	 * Apply data in the Table Canais Android or Canais iOS
+	 * Apply data in the Table of channel
 	 *
 	 * @param {string} table The table name (ANDROID or iOS).
-	 * @param {array} rows The map with data to apply
-	 * @param {any} data The data of API
+	 * @param {array} sourceRows The map with data to apply
+	 * @param {any} subSourceRows The map with data to apply
 	 * @return void
 	 * @customfunction
 	 */
@@ -43,11 +43,11 @@ function updateNegativeList() {
 			this.getModule('edith')().showFeedback({
 				suffix: 'Negative List',
 				description:
-					'Lista de negativação ' +
+					'Negative list ' +
 					table +
-					' atualizado. \n\n' +
+					' updated. \n\n' +
 					(subSourceRows.length + sourceRows.length) +
-					' items encontrados.',
+					' items finded.',
 			});
 		};
 	};

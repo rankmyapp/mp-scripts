@@ -111,6 +111,6 @@ function updateNegativeList() {
 		channelName,
 		channelId,
 		apiKey,
-		_applyDataOnTable(channelName)
+		_applyDataOnTable('Negative List')
 	);
 }

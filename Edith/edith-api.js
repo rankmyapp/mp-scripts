@@ -5,10 +5,10 @@
 function updateNegativeList() {
 	const _handleResetRows = (table) => {
 		const ss = SpreadsheetApp.getActive();
-		const sheetCanalDevice = ss.getSheetByName(table);
+		const sheetChannelDevice = ss.getSheetByName(table);
 
-		sheetCanalDevice.getRange('A3:B').clearContent();
-		sheetCanalDevice.getRange('E3:F').clearContent();
+		sheetChannelDevice.getRange('A3:B').clearContent();
+		sheetChannelDevice.getRange('E3:F').clearContent();
 	};
 
 	/**
@@ -22,21 +22,18 @@ function updateNegativeList() {
 	 */
 	const _applyDataOnTable = (table) => {
 		return (sourceRows, subSourceRows) => {
-			Logger.log(sourceRows);
-			Logger.log(subSourceRows);
 			_handleResetRows(table);
 
-			Logger.log(table)
 			const ss = SpreadsheetApp.getActive();
-			const sheetCanalDevice = ss.getSheetByName(table);
+			const sheetChannelDevice = ss.getSheetByName(table);
 
 			if (sourceRows.length) {
-				const range = sheetCanalDevice.getRange('A3:B' + (3 + sourceRows.length - 1));
+				const range = sheetChannelDevice.getRange('A3:B' + (3 + sourceRows.length - 1));
 				range.setValues(sourceRows);
 			}
 
 			if (subSourceRows.length) {
-				const range = sheetCanalDevice.getRange('E3:F' + (3 + subSourceRows.length - 1));
+				const range = sheetChannelDevice.getRange('E3:F' + (3 + subSourceRows.length - 1));
 				range.setValues(subSourceRows);
 			}
 

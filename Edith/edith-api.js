@@ -40,7 +40,6 @@ function updateNegativeList() {
 			this.getModule('edith')().showFeedback({
 				suffix: 'Negative List',
 				description:
-					'Negative list ' +
 					table +
 					' updated. \n\n' +
 					(subSourceRows.length + sourceRows.length) +

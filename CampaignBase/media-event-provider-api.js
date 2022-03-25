@@ -1,9 +1,48 @@
+// Temporary
+function requestLeanData() {
+  const ui = SpreadsheetApp.getUi();
+
+  const result = ui.alert(
+    'Dados Raw',
+    'Deseja utilizar a nova busca de dados raw?\n\nRecomendamos a utilização da nova rota.',
+    ui.ButtonSet.YES_NO
+  );
+
+  if (result == ui.Button.YES) {
+    return true;
+  } else if (result == ui.Button.NO) {
+    return false;
+  }
+
+  return undefined;
+}
+
 function updateConversions(ctx) {
+  const usersBeta = [
+    'jeconias.santos@rankmyapp.com.br',
+    'assuncao.junior@rankmyapp.com.br',
+    'carlos.martins@rankmyapp.com.br',
+    'leonardo.gelsi@rankmyapp.com.br',
+    'henrique.scarabelin@rankmyapp.com.br',
+  ];
+
   if (
     ctx !== this.GLOBAL.context.APPSFLYER &&
     ctx !== this.GLOBAL.context.TRACKIER
   )
     return;
+
+  // Temporary
+  const lean = {
+    isLean: false,
+    suffix: '/lean',
+  };
+
+  if (usersBeta.includes(Session.getUser().getEmail())) {
+    lean.isLean = requestLeanData();
+  }
+
+  if (lean.isLean === undefined) return;
 
   const tableUtil = this.getUtil('table')();
 
@@ -222,11 +261,8 @@ function updateConversions(ctx) {
     if (!queryParams.campaignIds) {
       callback([]);
     } else {
-      const data = this.getModule('media')().request.get(
-        '/' + ctx,
-        {},
-        queryParams
-      );
+      const path = `/${ctx}${lean.isLean ? lean.suffix : ''}`;
+      const data = this.getModule('media')().request.get(path, {}, queryParams);
       if (!data) return;
 
       callback(data);

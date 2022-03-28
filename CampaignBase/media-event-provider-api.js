@@ -38,7 +38,7 @@ function updateConversions(ctx) {
     suffix: '/lean',
   };
 
-  if (usersBeta.includes(Session.getUser().getEmail())) {
+  if (usersBeta.includes(Session.getActiveUser().getEmail())) {
     lean.isLean = requestLeanData();
   }
 

@@ -279,7 +279,7 @@
     });
 
     ref.addModule('media', {
-      url_base: 'https://jarvis-gateway.rankmyapp.com/provider',
+      url_base: 'https://f7f9-168-194-177-3.ngrok.io',
       headers: {
         Authorization: '<token>',
       },

@@ -4,7 +4,12 @@ function requestLeanData() {
 
   const result = ui.alert(
     'Dados Raw',
-    'Deseja utilizar a nova busca de dados raw?\n\nRecomendamos a utilização da nova rota.',
+    `Estamos realizando testes para obtermos os dados de forma mais rápida,
+    porém poderá existir divergências nos dados obtidos.\n
+    Deseja utilizar a nova busca de dados raw?\n
+    Sim = Consulta dos dados mais rápidas, porém ainda em TESTES.
+    Não = Consulta dos dados como antes.
+    `,
     ui.ButtonSet.YES_NO
   );
 
@@ -18,14 +23,6 @@ function requestLeanData() {
 }
 
 function updateConversions(ctx) {
-  const usersBeta = [
-    'jeconias.santos@rankmyapp.com.br',
-    'assuncao.junior@rankmyapp.com.br',
-    'carlos.martins@rankmyapp.com.br',
-    'leonardo.gelsi@rankmyapp.com.br',
-    'henrique.scarabelin@rankmyapp.com.br',
-  ];
-
   if (
     ctx !== this.GLOBAL.context.APPSFLYER &&
     ctx !== this.GLOBAL.context.TRACKIER
@@ -38,10 +35,7 @@ function updateConversions(ctx) {
     suffix: '/lean',
   };
 
-  if (usersBeta.includes(Session.getActiveUser().getEmail())) {
-    lean.isLean = requestLeanData();
-  }
-
+  lean.isLean = requestLeanData();
   if (lean.isLean === undefined) return;
 
   const tableUtil = this.getUtil('table')();

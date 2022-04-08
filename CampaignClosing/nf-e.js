@@ -29,6 +29,13 @@ function updateNFeJarvis() {
     data.forEach((item) => {
       const period = item.budget?.period?.split('T');
 
+      const getInvoice = (value, fallback) => {
+        if (typeof value === 'number' && value <= 0) return fallback;
+        if (typeof value === 'string' && isNaN(parseFloat(value)))
+          return fallback;
+        return value;
+      };
+
       rows.push([
         item._id,
         item.status,
@@ -43,7 +50,7 @@ function updateNFeJarvis() {
         item.budget?.extraBudget,
         item.budget?.deduction,
         item.budget?.revenueChurn,
-        item.budget?.invoice,
+        getInvoice(item.budget?.invoice, item.budget?.initialValue),
         item.budget?.isInvoiceApproved === 1 ? 'Sim' : 'Não',
         item.accountManager,
         item.strategist,

@@ -222,11 +222,8 @@ function updateConversions(ctx) {
     if (!queryParams.campaignIds) {
       callback([]);
     } else {
-      const data = this.getModule('media')().request.get(
-        '/' + ctx,
-        {},
-        queryParams
-      );
+      const path = `/${ctx}/lean`;
+      const data = this.getModule('media')().request.get(path, {}, queryParams);
       if (!data) return;
 
       callback(data);

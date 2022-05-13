@@ -128,9 +128,8 @@
            * @return the payload in JSON.
            * @customfunction
            */
-          get: function (path, params, queryString) {
+          get: function (path, params, queryString, localHeaders = {}) {
             if (typeof path !== 'string') return undefined;
-
             const request =
               url_base +
               _replaceParamsByValues(path, params) +
@@ -140,7 +139,7 @@
             const resp = UrlFetchApp.fetch(request, {
               contentType: 'application/json',
               muteHttpExceptions: true,
-              headers: headers,
+              headers: {...headers, ...localHeaders},
             });
 
             if (resp.getResponseCode() === 200) {
@@ -264,6 +263,8 @@
             updateMPAutomationJarvis.call(ultronCTX),
           updateCurrenciesMPAutomationJarvis: () =>
             updateCurrenciesMPAutomationJarvis.call(ultronCTX),
+					updateNegativeList: () =>
+            updateNegativeList.call(ultronCTX),
         },
       };
     };
@@ -272,17 +273,22 @@
 
     //Initial_modules
     ref.addModule('jarvis', {
-      url_base: 'https://jarvis-gateway.rankmyapp.com/jarvis',
+      url_base: 'https://jarvis-api-gateway.apps.dev.rankmycluster.com/jarvis',
       headers: {
         Authorization: '<token>',
       },
     });
 
     ref.addModule('media', {
-      url_base: 'https://jarvis-gateway.rankmyapp.com/provider',
+      url_base:
+        'https://jarvis-api-gateway.apps.dev.rankmycluster.com/provider',
       headers: {
         Authorization: '<token>',
       },
+    });
+
+		ref.addModule('edith', {
+      url_base: 'https://edith.apps.dev.rankmycluster.com',
     });
 
     initUltronUtils.call(ref);

@@ -36,6 +36,10 @@ function updateNFeJarvis() {
         return value;
       };
 
+      const isInvoiceApproved =
+        item.budget?.isInvoiceApproved === 1 ||
+        item.budget?.isInvoiceApproved === true;
+
       rows.push([
         item._id,
         item.status,
@@ -51,7 +55,7 @@ function updateNFeJarvis() {
         item.budget?.deduction,
         item.budget?.revenueChurn,
         getInvoice(item.budget?.invoice, item.budget?.initialValue),
-        item.budget?.isInvoiceApproved === 1 ? 'Sim' : 'Não',
+        isInvoiceApproved ? 'Sim' : 'Não',
         item.accountManager,
         item.strategist,
         item.accountAffiliate,

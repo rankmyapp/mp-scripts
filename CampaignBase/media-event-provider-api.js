@@ -1,42 +1,9 @@
-// Temporary
-function requestLeanData() {
-  const ui = SpreadsheetApp.getUi();
-
-  const result = ui.alert(
-    'Dados Raw',
-    `Estamos realizando testes para obtermos os dados de forma mais rápida,
-    porém poderá existir divergências nos dados obtidos.\n
-    Deseja utilizar a nova busca de dados raw?\n
-    Sim = Consulta dos dados mais rápidas, porém ainda em TESTES.
-    Não = Consulta dos dados como antes.
-    `,
-    ui.ButtonSet.YES_NO
-  );
-
-  if (result == ui.Button.YES) {
-    return true;
-  } else if (result == ui.Button.NO) {
-    return false;
-  }
-
-  return undefined;
-}
-
 function updateConversions(ctx) {
   if (
     ctx !== this.GLOBAL.context.APPSFLYER &&
     ctx !== this.GLOBAL.context.TRACKIER
   )
     return;
-
-  // Temporary
-  const lean = {
-    isLean: false,
-    suffix: '/lean',
-  };
-
-  lean.isLean = requestLeanData();
-  if (lean.isLean === undefined) return;
 
   const tableUtil = this.getUtil('table')();
 
@@ -255,7 +222,7 @@ function updateConversions(ctx) {
     if (!queryParams.campaignIds) {
       callback([]);
     } else {
-      const path = `/${ctx}${lean.isLean ? lean.suffix : ''}`;
+      const path = `/${ctx}/lean`;
       const data = this.getModule('media')().request.get(path, {}, queryParams);
       if (!data) return;
 

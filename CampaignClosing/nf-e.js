@@ -55,7 +55,7 @@ function updateNFeJarvis() {
         item.budget?.deduction,
         item.budget?.revenueChurn,
         getInvoice(item.budget?.invoice, item.budget?.initialValue),
-        isInvoiceApproved ? 'Sim' : 'Não',
+        isInvoiceApproved === 1 ? 'Sim' : 'Não',
         item.accountManager,
         item.strategist,
         item.accountAffiliate,

@@ -1,3 +1,19 @@
+function selectAppsflyerLeanSource() {
+  const ui = SpreadsheetApp.getUi();
+
+  const result = ui.alert(
+    "Dados Consolidados",
+    `Atualmente estamos realizando testes em uma nova forma de processar e armazenar os dados do Appsflyer. Recomenda-se usar \
+    a nova fonte de dados, mas caso queira continuar usando a fonte antiga (principalmente para comparar valores), clique em "Não"\n
+    Sim = Consultar usando a nova fonte de dados.
+    Não = Consultar usando a antiga fonte de dados.
+    `,
+    ui.ButtonSet.YES_NO
+  );
+
+  return result === ui.Button.NO ? "lean-jarvis" : "lean";
+}
+
 function updateConversions(ctx) {
   if (
     ctx !== this.GLOBAL.context.APPSFLYER &&
@@ -5,21 +21,26 @@ function updateConversions(ctx) {
   )
     return;
 
-  const tableUtil = this.getUtil('table')();
+  let appsflyerLeanSourcePath;
+  if (ctx === this.GLOBAL.context.APPSFLYER) {
+    appsflyerLeanSourcePath = selectAppsflyerLeanSource();
+  }
+
+  const tableUtil = this.getUtil("table")();
 
   const ALIAS = {
-    configurationSheet: 'configuration_' + ctx,
-    dashboardAndroidSheet: 'dashboard_' + ctx + '_android',
-    dashboardiOSSheet: 'dashboard_' + ctx + '_ios',
-    canaisAndroid: 'Canais Android',
-    canaisIOS: 'Canais iOS',
+    configurationSheet: "configuration_" + ctx,
+    dashboardAndroidSheet: "dashboard_" + ctx + "_android",
+    dashboardiOSSheet: "dashboard_" + ctx + "_ios",
+    canaisAndroid: "Canais Android",
+    canaisIOS: "Canais iOS",
   };
 
   const _getFiltersNames = () => {
-    const cell = tableUtil.findCellByText('filtro_appsflyer', 'Event Filter');
+    const cell = tableUtil.findCellByText("filtro_appsflyer", "Event Filter");
     if (!cell) return [];
 
-    const appsflyer = ss.getSheetByName('filtro_appsflyer');
+    const appsflyer = ss.getSheetByName("filtro_appsflyer");
     const range = appsflyer.getRange(cell.row + 1, cell.column, 20);
 
     return range
@@ -32,18 +53,18 @@ function updateConversions(ctx) {
     if (ctx !== this.GLOBAL.context.APPSFLYER) return data;
 
     const IGNORE_COLUMNS = [
-      'campaign_id',
-      'publish_name',
-      'created',
-      'country',
-      'channel',
-      'media_source',
-      'impressions',
-      'clicks',
-      'ctr',
-      'installs',
-      'install',
-      'conversion_rate',
+      "campaign_id",
+      "publish_name",
+      "created",
+      "country",
+      "channel",
+      "media_source",
+      "impressions",
+      "clicks",
+      "ctr",
+      "installs",
+      "install",
+      "conversion_rate",
     ];
 
     const filters = _getFiltersNames();
@@ -71,10 +92,10 @@ function updateConversions(ctx) {
     contextApplyData,
   }) => {
     return (data) => {
-      const androidIds = (campaignIDAndroid || '')
-        .replace(/@/g, ',')
-        .split(',');
-      const iOSIds = (campaignIDiOS || '').replace(/@/g, ',').split(',');
+      const androidIds = (campaignIDAndroid || "")
+        .replace(/@/g, ",")
+        .split(",");
+      const iOSIds = (campaignIDiOS || "").replace(/@/g, ",").split(",");
 
       const dataAndroid = _filterEvents(
         data.filter((v) =>
@@ -94,14 +115,14 @@ function updateConversions(ctx) {
       // is_primary_attribution must is always in position 9
       const orderOfColumns = {
         names: [
-          'created',
-          'country',
-          'media_source',
-          'revenue',
-          'revenueWithDuplicates',
-          'install',
-          'uninstall',
-          'is_primary_attribution',
+          "created",
+          "country",
+          "media_source",
+          "revenue",
+          "revenueWithDuplicates",
+          "install",
+          "uninstall",
+          "is_primary_attribution",
         ],
         positions: [2, 3, 4, 5, 6, 7, 8, 9],
       };
@@ -131,17 +152,17 @@ function updateConversions(ctx) {
         );
 
         rangeAndroid.setValues([
-          ['source', ...columns],
+          ["source", ...columns],
           ...dataAndroid.map((v) => [ctx, ...columns.map((c) => v[c])]),
         ]);
 
-        this.getModule('media')().showFeedback({
+        this.getModule("media")().showFeedback({
           suffix: ctx.charAt(0).toUpperCase() + ctx.slice(1),
           description:
             ALIAS.dashboardAndroidSheet +
-            ' recebeu ' +
+            " recebeu " +
             dataAndroid.length +
-            ' linha(s).',
+            " linha(s).",
         });
       } else if (
         !dataAndroid.length &&
@@ -156,13 +177,13 @@ function updateConversions(ctx) {
           )
           .clearContent();
 
-        this.getModule('media')().showFeedback({
+        this.getModule("media")().showFeedback({
           suffix: ctx.charAt(0).toUpperCase() + ctx.slice(1),
           description:
             ALIAS.dashboardAndroidSheet +
-            ' recebeu ' +
+            " recebeu " +
             dataAndroid.length +
-            ' linha(s).',
+            " linha(s).",
         });
       }
 
@@ -186,17 +207,17 @@ function updateConversions(ctx) {
         );
 
         rangeiOS.setValues([
-          ['source', ...columns],
+          ["source", ...columns],
           ...dataiOS.map((v) => [ctx, ...columns.map((c) => v[c])]),
         ]);
 
-        this.getModule('media')().showFeedback({
+        this.getModule("media")().showFeedback({
           suffix: ctx.charAt(0).toUpperCase() + ctx.slice(1),
           description:
             ALIAS.dashboardiOSSheet +
-            ' recebeu ' +
+            " recebeu " +
             dataiOS.length +
-            ' linha(s).',
+            " linha(s).",
         });
       } else if (
         !dataiOS.length &&
@@ -206,13 +227,13 @@ function updateConversions(ctx) {
           .getRange(2, 1, sheetiOS.getMaxRows(), sheetiOS.getMaxColumns())
           .clearContent();
 
-        this.getModule('media')().showFeedback({
+        this.getModule("media")().showFeedback({
           suffix: ctx.charAt(0).toUpperCase() + ctx.slice(1),
           description:
             ALIAS.dashboardiOSSheet +
-            ' recebeu ' +
+            " recebeu " +
             dataiOS.length +
-            ' linha(s).',
+            " linha(s).",
         });
       }
     };
@@ -222,8 +243,13 @@ function updateConversions(ctx) {
     if (!queryParams.campaignIds) {
       callback([]);
     } else {
-      const path = `/${ctx}/lean`;
-      const data = this.getModule('media')().request.get(path, {}, queryParams);
+      const extraPath =
+        ctx === this.GLOBAL.context.APPSFLYER
+          ? appsflyerLeanSourcePath
+          : "lean";
+
+      const path = `/${ctx}/${extraPath}`;
+      const data = this.getModule("media")().request.get(path, {}, queryParams);
       if (!data) return;
 
       callback(data);
@@ -267,28 +293,28 @@ function updateConversions(ctx) {
 
   const campaignIDAndroid = ss
     .getSheetByName(ALIAS.canaisAndroid)
-    .getRange('N1')
+    .getRange("N1")
     .getValue();
 
   const campaignIDiOS = ss
     .getSheetByName(ALIAS.canaisIOS)
-    .getRange('N1')
+    .getRange("N1")
     .getValue();
 
   const dateAndroid = ss
     .getSheetByName(ALIAS.canaisAndroid)
-    .getRange('N2')
+    .getRange("N2")
     .getValue();
-  const dateIOS = ss.getSheetByName(ALIAS.canaisIOS).getRange('N2').getValue();
+  const dateIOS = ss.getSheetByName(ALIAS.canaisIOS).getRange("N2").getValue();
 
   if (!(dateAndroid instanceof Date) && !(dateIOS instanceof Date)) {
-    this.getModule('media')().showFeedback({
+    this.getModule("media")().showFeedback({
       suffix: ctx.charAt(0).toUpperCase() + ctx.slice(1),
       description:
         ALIAS.canaisAndroid +
-        ' e ' +
+        " e " +
         ALIAS.canaisIOS +
-        ' possuem uma data de início inválida ou não definida.\n\n Dica: Use o Media Automation Jarvis para atualizar as datas.',
+        " possuem uma data de início inválida ou não definida.\n\n Dica: Use o Media Automation Jarvis para atualizar as datas.",
     });
     return;
   }
@@ -296,11 +322,11 @@ function updateConversions(ctx) {
   const campaignID = (id) =>
     [id]
       .filter((v) => !!v)
-      .join(',')
-      .replace(/@/g, ',')
-      .replace(/\s/g, '');
+      .join(",")
+      .replace(/@/g, ",")
+      .replace(/\s/g, "");
 
-  const campaignString = (id) => (typeof id === 'number' ? id.toString() : id);
+  const campaignString = (id) => (typeof id === "number" ? id.toString() : id);
 
   /**
    *
@@ -311,9 +337,9 @@ function updateConversions(ctx) {
   const getFormattedDate = (value) =>
     [
       value.getFullYear(),
-      (value.getMonth() + 1).toString().padStart(2, '0'),
-      value.getDate().toString().padStart(2, '0'),
-    ].join('-');
+      (value.getMonth() + 1).toString().padStart(2, "0"),
+      value.getDate().toString().padStart(2, "0"),
+    ].join("-");
 
   const month = dateAndroid ? dateAndroid.getMonth() : dateIOS.getMonth();
   const year = dateAndroid ? dateAndroid.getFullYear() : dateIOS.getFullYear();
@@ -331,8 +357,8 @@ function updateConversions(ctx) {
   const queryParams = {
     withDuplicate: true,
     country: true,
-    orderDirection: 'asc',
-    eventNames: filterEvents.length ? filterEvents.join(',') : undefined,
+    orderDirection: "asc",
+    eventNames: filterEvents.length ? filterEvents.join(",") : undefined,
   };
 
   /**
@@ -363,7 +389,7 @@ function updateConversions(ctx) {
     );
   };
 
-  const requestsAdnroid = requests(
+  const requestsAndroid = requests(
     campaignIDAndroid,
     campaignStartDate,
     campaignEndDate
@@ -375,7 +401,7 @@ function updateConversions(ctx) {
     campaignEndDate
   );
 
-  Promise.all(requestsAdnroid).then((response) => {
+  Promise.all(requestsAndroid).then((response) => {
     const data = Array.isArray(response) ? response : [];
 
     _applyDataOnTable({

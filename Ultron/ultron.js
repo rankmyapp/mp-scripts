@@ -6,10 +6,10 @@
 
   const GLOBAL = {
     context: {
-      TRACKIER: 'trackier',
-      APPSFLYER: 'appsflyer',
-      ANDROID: 'Android',
-      IOS: 'iOS',
+      TRACKIER: "trackier",
+      APPSFLYER: "appsflyer",
+      ANDROID: "Android",
+      IOS: "iOS",
     },
   };
 
@@ -21,7 +21,7 @@
    */
   return new (function initUltron() {
     const bootstrap = () => {
-      console.log('Running Ultron version', '@ULTRON_VERSION');
+      console.log("Running Ultron version", "@ULTRON_VERSION");
 
       /**
        *
@@ -32,17 +32,17 @@
       function _showFeedback(moduleName) {
         return function ({ title, description, suffix, fail, toast }) {
           const moduleNameWithSuffix =
-            moduleName + (suffix ? ' - ' + suffix : '');
+            moduleName + (suffix ? " - " + suffix : "");
 
           const contextTitle =
             (title || moduleNameWithSuffix) +
-            ' | ' +
-            (!fail ? 'Sucesso' : 'Falhou');
+            " | " +
+            (!fail ? "Sucesso" : "Falhou");
 
           if (toast) {
             SpreadsheetApp.getActiveSpreadsheet().toast(
               description,
-              contextTitle + '\n',
+              contextTitle + "\n",
               15
             );
           } else {
@@ -62,13 +62,13 @@
        * @customfunction
        */
       function _handleQueryString(qs) {
-        if (typeof qs !== 'object') return '';
+        if (typeof qs !== "object") return "";
 
         const qsKeyValue = (key, value) =>
-          encodeURIComponent(key) + '=' + encodeURIComponent(value);
+          encodeURIComponent(key) + "=" + encodeURIComponent(value);
 
         return (
-          '?' +
+          "?" +
           Object.keys(qs)
             .reduce(function (acc, curr) {
               if (qs[curr] === undefined) return acc;
@@ -81,7 +81,7 @@
 
               return acc.concat(qsKeyValue(curr, qs[curr]));
             }, [])
-            .join('&')
+            .join("&")
         );
       }
 
@@ -95,13 +95,13 @@
        */
       function _replaceParamsByValues(path, params) {
         const p =
-          typeof params === 'object' && !Array.isArray(params) ? params : {};
+          typeof params === "object" && !Array.isArray(params) ? params : {};
         const pKeys = Object.keys(p);
         var _replaceParamsByValues_output = path;
 
         pKeys.forEach(function (pKey) {
           _replaceParamsByValues_output = _replaceParamsByValues_output.replace(
-            ':' + pKey,
+            ":" + pKey,
             p[pKey]
           );
         });
@@ -128,32 +128,31 @@
            * @return the payload in JSON.
            * @customfunction
            */
-          get: function (path, params, queryString) {
-            if (typeof path !== 'string') return undefined;
-
+          get: function (path, params, queryString, localHeaders = {}) {
+            if (typeof path !== "string") return undefined;
             const request =
               url_base +
               _replaceParamsByValues(path, params) +
               _handleQueryString(queryString);
-            console.log('requesting: ' + request);
+            console.log("requesting: " + request);
 
             const resp = UrlFetchApp.fetch(request, {
-              contentType: 'application/json',
+              contentType: "application/json",
               muteHttpExceptions: true,
-              headers: headers,
+              headers: { ...headers, ...localHeaders },
             });
 
             if (resp.getResponseCode() === 200) {
               return JSON.parse(resp.getContentText());
             } else {
-              _showFeedback('System')({
+              _showFeedback("System")({
                 fail: true,
                 description:
-                  'Erro na request: ' +
+                  "Erro na request: " +
                   request +
-                  '\n\nCode: ' +
+                  "\n\nCode: " +
                   resp.getResponseCode() +
-                  '\nResponse: ' +
+                  "\nResponse: " +
                   resp.getContentText(),
               });
               return undefined;
@@ -172,28 +171,28 @@
        */
       const _addModule = (name, moduleRef) => {
         if (
-          typeof name !== 'string' ||
+          typeof name !== "string" ||
           !moduleRef ||
-          typeof moduleRef.url_base !== 'string'
+          typeof moduleRef.url_base !== "string"
         )
           return false;
         if (
           moduleRef &&
           moduleRef.headers !== undefined &&
-          typeof moduleRef.headers !== 'object'
+          typeof moduleRef.headers !== "object"
         )
           return false;
         if (ULTRON.modules[name]) {
-          console.log(name + ' already exists in the ULTRON instance.');
+          console.log(name + " already exists in the ULTRON instance.");
           return false;
         }
 
         ULTRON.modules[name] = function () {
           const _nameFormatted = name
             .toLowerCase()
-            .split(' ')
+            .split(" ")
             .map((n) => n.charAt(0).toUpperCase() + n.slice(1))
-            .join(' ');
+            .join(" ");
 
           return {
             request: _requester(moduleRef.url_base, moduleRef.headers),
@@ -214,14 +213,14 @@
        */
       const _addUtils = (name, utilRef) => {
         if (
-          typeof name !== 'string' ||
-          typeof utilRef !== 'object' ||
+          typeof name !== "string" ||
+          typeof utilRef !== "object" ||
           Array.isArray(utilRef)
         )
           return false;
 
         if (ULTRON.utils[name]) {
-          console.log(name + ' already exists in the ULTRON instance.');
+          console.log(name + " already exists in the ULTRON instance.");
           return false;
         }
 
@@ -264,6 +263,7 @@
             updateMPAutomationJarvis.call(ultronCTX),
           updateCurrenciesMPAutomationJarvis: () =>
             updateCurrenciesMPAutomationJarvis.call(ultronCTX),
+          updateNegativeList: () => updateNegativeList.call(ultronCTX),
         },
       };
     };
@@ -271,18 +271,22 @@
     const ref = bootstrap();
 
     //Initial_modules
-    ref.addModule('jarvis', {
-      url_base: 'https://jarvis-gateway.rankmyapp.com/jarvis',
+    ref.addModule("jarvis", {
+      url_base: "https://jarvis-gateway.rankmyapp.com/jarvis",
       headers: {
-        Authorization: '<token>',
+        Authorization: "<token>",
       },
     });
 
-    ref.addModule('media', {
-      url_base: 'https://jarvis-gateway.rankmyapp.com/provider',
+    ref.addModule("media", {
+      url_base: "https://jarvis-gateway.rankmyapp.com/provider",
       headers: {
-        Authorization: '<token>',
+        Authorization: "<token>",
       },
+    });
+
+    ref.addModule("edith", {
+      url_base: "https://jarvis-gateway.rankmyapp.com/edith",
     });
 
     initUltronUtils.call(ref);

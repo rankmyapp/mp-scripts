@@ -4,8 +4,8 @@
 
 function updateMPAutomationJarvis() {
   const _requestData = ({ year, month }, callback) => {
-    const data = this.getModule('jarvis')().request.get(
-      '/sheets/nf-e/:year/:month',
+    const data = this.getModule("jarvis")().request.get(
+      "/sheets/nf-e/:year/:month",
       {
         year,
         month,
@@ -19,21 +19,21 @@ function updateMPAutomationJarvis() {
 
   const ss = SpreadsheetApp.getActive();
 
-  const automation = ss.getSheetByName('Automacao');
+  const automation = ss.getSheetByName("Automacao");
 
-  const year = automation.getRange('A2').getValue();
+  const year = automation.getRange("A2").getValue();
   const month = automation
-    .getRange('B2')
+    .getRange("B2")
     .getValue()
     ?.toString()
-    .padStart(2, '0');
+    .padStart(2, "0");
 
   _requestData({ year, month }, (data) => {
     const rows = [];
 
     data.forEach((item) => {
-      const period = item.budget?.period?.split('T')?.[0] || '';
-      const [year, month] = period.split('-');
+      const period = item.budget?.period?.split("T")?.[0] || "";
+      const [year, month] = period.split("-");
       const isNextYear = parseInt(month) + 1 >= 13;
       const nextMonth = isNextYear ? 1 : parseInt(month) + 1;
 
@@ -45,7 +45,7 @@ function updateMPAutomationJarvis() {
         item._id,
         item.account?.businessName,
         item.account?.name,
-        item.budget?.isInvoiceApproved === 1 ? 'Sim' : 'Não',
+        item.budget?.isInvoiceApproved ? "Sim" : "Não",
         item.currency,
         item.budget?.invoice,
         item.days,
@@ -53,12 +53,12 @@ function updateMPAutomationJarvis() {
     });
 
     // RESET
-    const sheet = ss.getSheetByName('Automacao_MP');
-    sheet.getRange('A2:J').clearContent();
+    const sheet = ss.getSheetByName("Automacao_MP");
+    sheet.getRange("A2:J").clearContent();
 
     // Apply values
     if (rows.length) {
-      const range = sheet.getRange('A2:K' + (2 + rows.length - 1));
+      const range = sheet.getRange("A2:K" + (2 + rows.length - 1));
       range.setValues(rows);
     }
   });

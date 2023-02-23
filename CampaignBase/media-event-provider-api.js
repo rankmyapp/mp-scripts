@@ -96,17 +96,19 @@ function updateConversions(ctx) {
         .replace(/@/g, ",")
         .split(",");
       const iOSIds = (campaignIDiOS || "").replace(/@/g, ",").split(",");
-
+      console.log('Data length', data.length);
       const dataAndroid = _filterEvents(
         data.filter((v) =>
           androidIds.find((id) => parseInt(id) == parseInt(v.campaign_id))
         )
       );
+      console.log('Data android length', dataAndroid.length);
       const dataiOS = _filterEvents(
         data.filter((v) =>
           iOSIds.find((id) => parseInt(id) === parseInt(v.campaign_id))
         )
       );
+      console.log('Data ios length', dataiOS.length);
 
       const ss = SpreadsheetApp.getActive();
       const sheetAndroid = ss.getSheetByName(ALIAS.dashboardAndroidSheet);

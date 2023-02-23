@@ -387,6 +387,9 @@ function updateConversions(ctx) {
     return intervalsOfMonth(start, end, 10, []).map(
       ({ start, end }) =>
         new Promise((resolve) => {
+          if(['', null, undefined].includes(campaignIds)) {
+            resolve();
+          }
           _requestData(
             {
               ...queryParams,

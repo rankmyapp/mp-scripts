@@ -378,6 +378,12 @@ function updateConversions(ctx) {
     return intervalsOfMonth(start, end, 10, []).map(
       ({ start, end }) =>
         new Promise((resolve) => {
+          console.log("Request", {
+            ...queryParams,
+            start: getFormattedDate(start),
+            end: getFormattedDate(end),
+            campaignIds: campaignID(campaignIds),
+          });
           _requestData(
             {
               ...queryParams,
@@ -393,13 +399,6 @@ function updateConversions(ctx) {
         })
     );
   };
-
-  console.log("Request", {
-    ...queryParams,
-    start: getFormattedDate(start),
-    end: getFormattedDate(end),
-    campaignIds: campaignID(campaignIds),
-  });
 
   const requestsAndroid = requests(
     campaignIDAndroid,

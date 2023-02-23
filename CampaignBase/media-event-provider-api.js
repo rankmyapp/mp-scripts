@@ -400,6 +400,8 @@ function updateConversions(ctx) {
     );
   };
 
+  console.log('CampaignIds', { campaignIDAndroid, campaignIDiOS });
+
   const requestsAndroid = requests(
     campaignIDAndroid,
     campaignStartDate,

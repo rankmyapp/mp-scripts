@@ -96,19 +96,19 @@ function updateConversions(ctx) {
         .replace(/@/g, ",")
         .split(",");
       const iOSIds = (campaignIDiOS || "").replace(/@/g, ",").split(",");
-      console.log('Data length', data.length);
+      console.log("Data length", data.length);
       const dataAndroid = _filterEvents(
         data.filter((v) =>
           androidIds.find((id) => parseInt(id) == parseInt(v.campaign_id))
         )
       );
-      console.log('Data android length', dataAndroid.length);
+      console.log("Data android length", dataAndroid.length);
       const dataiOS = _filterEvents(
         data.filter((v) =>
           iOSIds.find((id) => parseInt(id) === parseInt(v.campaign_id))
         )
       );
-      console.log('Data ios length', dataiOS.length);
+      console.log("Data ios length", dataiOS.length);
 
       const ss = SpreadsheetApp.getActive();
       const sheetAndroid = ss.getSheetByName(ALIAS.dashboardAndroidSheet);
@@ -252,6 +252,9 @@ function updateConversions(ctx) {
 
       const path = `/${ctx}/${extraPath}`;
       const data = this.getModule("media")().request.get(path, {}, queryParams);
+
+      console.log('Request path', path);
+
       if (!data) return;
 
       callback(data);
@@ -390,6 +393,13 @@ function updateConversions(ctx) {
         })
     );
   };
+
+  console.log("Request", {
+    ...queryParams,
+    start: getFormattedDate(start),
+    end: getFormattedDate(end),
+    campaignIds: campaignID(campaignIds),
+  });
 
   const requestsAndroid = requests(
     campaignIDAndroid,

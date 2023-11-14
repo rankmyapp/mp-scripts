@@ -98,7 +98,7 @@ function updateTSIJarvis() {
         const startDate = new Date(variation.effectiveDate);
         startDate.setHours(0, 0, 0, 0);
 
-        const endDate = new Date(variation.endDate);
+        const endDate = new Date();
         endDate.setHours(0, 0, 0, 0);
 
         rows.push([

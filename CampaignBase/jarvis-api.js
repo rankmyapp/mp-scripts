@@ -95,7 +95,7 @@ function updateTSIJarvis() {
     tsi.forEach(function (t) {
       const payoutLength = t.eventsPayouts.length;
       const tsiEndDate = new Date(t.endDate);
-      console.log(t.statusVarations)
+      console.log(t.statusVariations)
       let currentPayout = 0;
       t.eventsPayouts.forEach(function (variation) {
         //Reset hours

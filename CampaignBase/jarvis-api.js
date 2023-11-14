@@ -93,9 +93,8 @@ function updateTSIJarvis() {
     const rows = [];
 
     tsi.forEach(function (t) {
-      console.log(tsi);
       const payoutLength = t.eventsPayouts.length;
-      const tsiEndDate = new Date(tsi.endDate);
+      const tsiEndDate = tsi.endDate;
       let currentPayout = 0;
       t.eventsPayouts.forEach(function (variation) {
         console.log(variation);
@@ -107,7 +106,6 @@ function updateTSIJarvis() {
 
         if (currentPayout === payoutLength - 1) {
           endDate = tsiEndDate;
-          endDate.setHours(0, 0, 0, 0);
         } else {
           endDate = new Date(t.eventsPayouts[currentPayout + 1].effectiveDate);
           endDate.setHours(0, 0, 0, 0);

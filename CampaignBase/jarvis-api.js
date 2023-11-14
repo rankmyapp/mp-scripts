@@ -103,7 +103,7 @@ function updateTSIJarvis() {
 
         let endDate;
 
-        if (currentPayout === payoutLength - 1) {
+        if (currentPayout === payoutLength - 1 && payoutLength > 1) {
           endDate = new Date(t.eventsPayouts[currentPayout - 1].effectiveDate);
           endDate.setHours(0, 0, 0, 0);
         } else {

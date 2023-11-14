@@ -92,7 +92,7 @@ function updateTSIJarvis() {
     const tsi = data.trafficSourcesInstances || [];
     const rows = [];
 
-    this.getModule('jarvis')().Logger.log(tsi);
+    this.getModule('jarvis')().showFeedbackAndLog(tsi);
 
     tsi.forEach(function (t) {
       const payoutLength = t.eventsPayouts.length;

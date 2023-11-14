@@ -89,12 +89,11 @@ function updateTSIJarvis() {
     );
     if (typeof data !== 'object') return;
 
-    console.log(data);
-
     const tsi = data.trafficSourcesInstances || [];
     const rows = [];
 
     tsi.forEach(function (t) {
+      console.log(tsi);
       const payoutLength = t.eventsPayouts.length;
       let currentPayout = 0;
       t.eventsPayouts.forEach(function (variation) {

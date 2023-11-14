@@ -95,7 +95,6 @@ function updateTSIJarvis() {
     tsi.forEach(function (t) {
       const payoutLength = t.eventsPayouts.length;
       const tsiEndDate = new Date(t.endDate);
-      console.log(t.statusVariations)
       let currentPayout = 0;
       t.eventsPayouts.forEach(function (variation) {
         //Reset hours
@@ -108,8 +107,12 @@ function updateTSIJarvis() {
           endDate = new Date(t.eventsPayouts[currentPayout - 1].effectiveDate);
           endDate.setHours(0, 0, 0, 0);
         } else {
-          endDate = tsiEndDate;
-          endDate.setHours(0, 0, 0, 0);
+          if (t.statusVariations[0].newStatus === 'PAUSED') {
+            endDate = new Date(t.statusVariations[0].effectiveDate);
+          } else {
+            endDate = tsiEndDate;
+            endDate.setHours(0, 0, 0, 0);
+          }
         }
 
         rows.push([

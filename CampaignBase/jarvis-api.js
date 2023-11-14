@@ -64,7 +64,6 @@ function updateTSIJarvis() {
         suffix: 'Traffic Source Instances',
         description:
           'Canais ' +
-          'Testando 123' +
           table +
           ' atualizado. \n\n' +
           rows.length +
@@ -94,13 +93,22 @@ function updateTSIJarvis() {
     const rows = [];
 
     tsi.forEach(function (t) {
+      const payoutLength = t.eventsPayouts.length;
+      let currentPayout = 0;
       t.eventsPayouts.forEach(function (variation) {
         //Reset hours
         const startDate = new Date(variation.effectiveDate);
         startDate.setHours(0, 0, 0, 0);
 
-        const endDate = new Date();
-        endDate.setHours(0, 0, 0, 0);
+        let endDate;
+
+        if (currentPayout === payoutLength - 1) {
+          endDate = new Date(variation.endDate);
+          endDate.setHours(0, 0, 0, 0);
+        } else {
+          endDate = new Date(t.eventsPayouts[currentPayout + 1].effectiveDate);
+          endDate.setHours(0, 0, 0, 0);
+        }
 
         rows.push([
           t.channel,
@@ -114,6 +122,8 @@ function updateTSIJarvis() {
           variation.event,
           t.status,
         ]);
+
+        currentPayout++;
       });
     });
 

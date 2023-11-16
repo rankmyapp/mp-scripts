@@ -97,16 +97,15 @@ function updateTSIJarvis() {
       const tsiEndDate = new Date(t.endDate);
       let currentPayout = 0;
       t.eventsPayouts.forEach(function (variation) {
-        //Check if the current variation _id is equal to the next. If so, just send the next one
+        //Check if the current variation _id is equal to the previous. If so, just send the first one
         if (
-          payoutLength > 1 &&
-          currentPayout < payoutLength - 1 &&
           currentPayout > 0 &&
-          variation._id === t.eventsPayouts[currentPayout - 1]._id
+          t.eventsPayouts[currentPayout - 1]._id === variation._id
         ) {
           currentPayout++;
           return;
         }
+        
 
         //Reset hours
         const startDate = new Date(variation.effectiveDate);

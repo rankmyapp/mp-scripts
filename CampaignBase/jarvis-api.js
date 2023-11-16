@@ -97,6 +97,14 @@ function updateTSIJarvis() {
       const tsiEndDate = new Date(t.endDate);
       let currentPayout = 0;
       t.eventsPayouts.forEach(function (variation) {
+        //Check if the current variation is equal to the next
+        if (
+          currentPayout < payoutLength - 1 &&
+          variation._id === t.eventsPayouts[currentPayout + 1]._id
+        ) {
+          return;
+        }
+
         //Reset hours
         const startDate = new Date(variation.effectiveDate);
         startDate.setHours(0, 0, 0, 0);
@@ -105,15 +113,13 @@ function updateTSIJarvis() {
 
         if (currentPayout === payoutLength - 1 && payoutLength > 1) {
           endDate = new Date(t.eventsPayouts[currentPayout - 1].effectiveDate);
-          endDate.setHours(0, 0, 0, 0);
+        } else if (t.statusVariations[0].newStatus === 'PAUSED') {
+          endDate = new Date(t.statusVariations[0].effectiveDate);
         } else {
-          if (t.statusVariations[0].newStatus === 'PAUSED') {
-            endDate = new Date(t.statusVariations[0].effectiveDate);
-          } else {
-            endDate = tsiEndDate;
-            endDate.setHours(0, 0, 0, 0);
-          }
+          endDate = tsiEndDate;
         }
+
+        endDate.setHours(0, 0, 0, 0);
 
         rows.push([
           t.channel,

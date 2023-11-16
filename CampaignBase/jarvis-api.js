@@ -101,6 +101,7 @@ function updateTSIJarvis() {
         if (
           payoutLength > 1 &&
           currentPayout < payoutLength - 1 &&
+          currentPayout > 0 &&
           variation._id === t.eventsPayouts[currentPayout - 1]._id
         ) {
           currentPayout++;

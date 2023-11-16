@@ -97,15 +97,12 @@ function updateTSIJarvis() {
       const tsiEndDate = new Date(t.endDate);
       let currentPayout = 0;
       t.eventsPayouts.forEach(function (variation) {
-        //Check if the current variation _id is equal to the previous. If so, just send the first one
-        if (
-          currentPayout > 0 &&
-          t.eventsPayouts[currentPayout - 1]._id === variation._id
-        ) {
-          currentPayout++;
-          return;
-        }
-        
+        //Search for the current payout _id through the eventsPayouts and if there are more than one payout with the same _id, it will get the lowest index
+        const index = t.eventsPayouts.findIndex(
+          (payout) => payout._id === variation._id
+        );
+
+        if (payoutLength > 1 && index !== currentPayout) return;
 
         //Reset hours
         const startDate = new Date(variation.effectiveDate);

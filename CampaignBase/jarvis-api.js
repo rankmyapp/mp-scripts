@@ -93,12 +93,30 @@ function updateTSIJarvis() {
     const rows = [];
 
     tsi.forEach(function (t) {
+      const payoutLength = t.eventsPayouts.length;
+      const tsiEndDate = new Date(t.endDate);
+      let currentPayout = 0;
       t.eventsPayouts.forEach(function (variation) {
+        const index = t.eventsPayouts.findIndex(
+          (payout) => payout._id === variation._id
+        );
+
+        if (payoutLength > 1 && index !== currentPayout) return;
+
         //Reset hours
         const startDate = new Date(variation.effectiveDate);
         startDate.setHours(0, 0, 0, 0);
 
-        const endDate = new Date(variation.endDate);
+        let endDate;
+
+        if (currentPayout === payoutLength - 1 && payoutLength > 1) {
+          endDate = new Date(t.eventsPayouts[currentPayout - 1].effectiveDate);
+        } else if (t.statusVariations[0].newStatus === 'PAUSED') {
+          endDate = new Date(t.statusVariations[0].effectiveDate);
+        } else {
+          endDate = tsiEndDate;
+        }
+
         endDate.setHours(0, 0, 0, 0);
 
         rows.push([
@@ -113,6 +131,8 @@ function updateTSIJarvis() {
           variation.event,
           t.status,
         ]);
+
+        currentPayout++;
       });
     });
 

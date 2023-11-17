@@ -296,10 +296,24 @@ function updateConversions(ctx) {
     .getRange("N1")
     .getValue();
 
+  if(['', null, undefined].includes(campaignIDAndroid)) {
+    this.getModule("media")().showFeedback({
+      suffix: 'Error',
+      description: 'A campanha Android não possui tokens cadastrados'
+    })
+  }
+
   const campaignIDiOS = ss
     .getSheetByName(ALIAS.canaisIOS)
     .getRange("N1")
     .getValue();
+
+  if(['', null, undefined].includes(campaignIDiOS)) {
+    this.getModule("media")().showFeedback({
+      suffix: 'Error',
+      description: 'A campanha IOS não possui tokens cadastrados'
+    })
+  }
 
   const dateAndroid = ss
     .getSheetByName(ALIAS.canaisAndroid)
@@ -373,6 +387,9 @@ function updateConversions(ctx) {
     return intervalsOfMonth(start, end, 10, []).map(
       ({ start, end }) =>
         new Promise((resolve) => {
+          if(['', null, undefined].includes(campaignIds)) {
+            resolve();
+          }
           _requestData(
             {
               ...queryParams,

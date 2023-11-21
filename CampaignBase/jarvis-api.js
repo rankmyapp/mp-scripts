@@ -113,7 +113,7 @@ function updateTSIJarvis() {
         let endDate;
 
         if (currentPayout > 0 && payoutLength > 1) {
-          if (variation.effectiveDate === variation.endDate) {
+          if (variation.effectiveDate === variation.endDate || variation.endDate === t.eventsPayouts[currentPayout - 1].effectiveDate) {
             endDate = new Date(t.eventsPayouts[currentPayout - 1].effectiveDate);
           } else {
             endDate = tsiEndDate;

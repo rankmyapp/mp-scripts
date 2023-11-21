@@ -101,6 +101,8 @@ function updateTSIJarvis() {
           (payout) => payout._id === variation._id
         );
 
+        console.log(variation);
+
         if (payoutLength > 1 && index !== currentPayout) return;
 
         //Reset hours

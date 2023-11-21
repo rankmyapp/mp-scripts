@@ -94,9 +94,11 @@ function updateTSIJarvis() {
 
     tsi.forEach(function (t) {
       const payoutLength = t.eventsPayouts.length;
-      const tsiEndDate = new Date(t.endDate);
+      // Sum 1 day to tsiEndDate
+      const tsiEndDate = new Date(t.endDate) + 1;
       let currentPayout = 0;
       t.eventsPayouts.forEach(function (variation) {
+        console.log(variation);
         const index = t.eventsPayouts.findIndex(
           (payout) => payout._id === variation._id
         );

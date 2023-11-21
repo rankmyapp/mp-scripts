@@ -95,8 +95,8 @@ function updateTSIJarvis() {
     tsi.forEach(function (t) {
       const payoutLength = t.eventsPayouts.length;
       const tsiEndDate = new Date(t.endDate);
+      tsiEndDate.setHours(0, 0, 0, 0);
       tsiEndDate.setDate(tsiEndDate.getDate() + 1);
-      console.log(t);
       let currentPayout = 0;
       t.eventsPayouts.forEach(function (variation) {
         const index = t.eventsPayouts.findIndex(
@@ -122,8 +122,6 @@ function updateTSIJarvis() {
         } else {
           endDate = tsiEndDate;
         }
-
-        endDate.setHours(0, 0, 0, 0);
 
         rows.push([
           t.channel,

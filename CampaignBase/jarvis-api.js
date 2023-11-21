@@ -94,7 +94,7 @@ function updateTSIJarvis() {
 
     tsi.forEach(function (t) {
       const payoutLength = t.eventsPayouts.length;
-      const tsiEndDate = new Date(t.endDate);
+      const tsiEndDate = new Date(t.endDate) + 1;
       console.log(t);
       let currentPayout = 0;
       t.eventsPayouts.forEach(function (variation) {
@@ -114,7 +114,7 @@ function updateTSIJarvis() {
           if (variation.effectiveDate === variation.endDate) {
             endDate = new Date(t.eventsPayouts[currentPayout - 1].effectiveDate);
           } else {
-            endDate = new Date(variation._id);
+            endDate = tsiEndDate;
           }
         } else if (t.statusVariations[0].newStatus === 'PAUSED') {
           endDate = new Date(t.statusVariations[0].effectiveDate);

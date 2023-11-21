@@ -110,7 +110,7 @@ function updateTSIJarvis() {
 
         let endDate;
 
-        if (currentPayout === payoutLength - 1 && payoutLength > 1) {
+        if (currentPayout > 0 && payoutLength > 1) {
           endDate = new Date(t.eventsPayouts[currentPayout - 1].effectiveDate);
         } else if (t.statusVariations[0].newStatus === 'PAUSED') {
           endDate = new Date(t.statusVariations[0].effectiveDate);

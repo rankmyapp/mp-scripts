@@ -1,7 +1,7 @@
 {
   "version": "1.2.0",
   "scripts": {
-    "minify": "node ./CampaignBase && node ./CampaignClosing && node ./BillsToReceive && node ./Edith"
+    "minify": "node ./CampaignBase && node ./CampaignClosing && node ./BillsToReceive && node ./Edith && node ./Ultron"
   },
   "devDependencies": {
     "husky": "^7.0.2",

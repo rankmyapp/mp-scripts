@@ -119,6 +119,7 @@ function updateTSIJarvis() {
           }
         } else if (t.statusVariations[0].newStatus === 'PAUSED') {
           endDate = new Date(t.statusVariations[0].effectiveDate);
+          endDate.setDate(endDate.getDate() + 2);
         } else {
           endDate = tsiEndDate;
         }
